@@ -1,18 +1,24 @@
-# Step 1: Use a lightweight Node.js image
-FROM node:18-alpine
+# Use Node 20 (Next.js requires >=20.9.0)
+FROM node:20-alpine
 
-# Step 2: Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Step 3: Copy package.json and install dependencies
+# Copy package files
 COPY package*.json ./
-RUN npm install --production
 
-# Step 4: Copy the rest of your project files
+# Install dependencies
+RUN npm install
+
+# Copy rest of the code
 COPY . .
 
-# Step 5: Expose port (optional, usually 3000 or 8080)
+# Build the Next.js app
+RUN npm run build
+
+# Expose port
 EXPOSE 3000
 
-# Step 6: Start the app
-CMD ["npm", "start"]
+# Start the app
+CMD ["npm", "run", "start", "--", "-H", "0.0.0.0"]
+
